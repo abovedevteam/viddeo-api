@@ -8,10 +8,17 @@ export default class UserLoginsController {
     const email = request.input('email')
     const password = request.input('password')
 
-    const user = await User.query().where('email', email).firstOrFail()
+    const user = await User.query().where('email', email).first()
+
+    if (!user)
+      return response.notFound({
+        error: { field: 'email', message: 'Não existe nenhum usuário com este email.' },
+      })
 
     if (!(await Hash.verify(user.password, password))) {
-      return response.badRequest({ error: 'Login ou senha inválidos' })
+      return response.badRequest({
+        error: { field: 'password', message: 'Login ou senha inválidos' },
+      })
     }
 
     await this.deletePreviousTokens(user)
