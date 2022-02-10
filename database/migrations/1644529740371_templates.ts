@@ -7,7 +7,7 @@ export default class Templates extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.string('name')
-      table.string('template_url').notNullable()
+      table.string('template_url').nullable()
       table.string('description').nullable()
       table.string('instructions').nullable()
       table.float('rating').defaultTo(0.0)
@@ -18,6 +18,7 @@ export default class Templates extends BaseSchema {
       table.string('mp4_preview_url').nullable()
       table.string('preview_image_url').nullable()
 
+      table.timestamp('deleted_at', { useTz: true }).nullable().defaultTo(null)
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

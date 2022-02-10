@@ -27,10 +27,18 @@ export default class Template extends BaseModel {
   @column()
   public rating: number
 
-  @column()
+  @column({
+    serialize: (value: string) => {
+      return value ? JSON.parse(JSON.stringify(value)) : null
+    },
+  })
   public tags: Array<String>
 
-  @column()
+  @column({
+    serialize: (value: string) => {
+      return value ? JSON.parse(JSON.stringify(value)) : null
+    },
+  })
   public assets: Object
 
   @column()
@@ -44,6 +52,9 @@ export default class Template extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @column.dateTime()
+  public deletedAt: DateTime
 
   @hasOne(() => TemplateCustomization)
   public templateCustomization: HasOne<typeof TemplateCustomization>
