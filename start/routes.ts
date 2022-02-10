@@ -21,10 +21,10 @@
 import Route from '@ioc:Adonis/Core/Route'
 import './routes/auth'
 
-Route.group(() => {
-  Route.get('/', async () => {
-    return { hello: 'world' }
-  })
+Route.get('/', async () => {
+  return { hello: 'world' }
 })
+
+Route.group(() => {})
   .prefix('/api')
   .middleware('auth')

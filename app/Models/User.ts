@@ -20,6 +20,9 @@ export default class User extends BaseModel {
   public companyId: number
 
   @column()
+  public isAdmin: boolean
+
+  @column()
   public rememberMeToken?: string
 
   @column.dateTime({ autoCreate: true })
