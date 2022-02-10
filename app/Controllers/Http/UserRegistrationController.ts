@@ -25,6 +25,8 @@ export default class UserRegistrationController {
     }
     const company = await Company.create({ name: companyName })
     const user = await company.related('users').create({ email, name, password })
+    company.ownerId = user.id
+    company.save()
 
     const token = await auth.use('api').attempt(user.email, password)
 

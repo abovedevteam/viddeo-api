@@ -9,6 +9,7 @@ export default class Companies extends BaseSchema {
 
       table.string('name')
 
+      table.bigInteger('owner_id').unsigned().references('users.id').onDelete('CASCADE')
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
