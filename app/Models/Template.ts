@@ -7,7 +7,7 @@ export default class Template extends BaseModel {
   public id: number
 
   @column({ serializeAs: null })
-  public templateUrl: number
+  public templateUrl: String
 
   @column()
   public name: String
@@ -51,13 +51,17 @@ export default class Template extends BaseModel {
 
   @column({
     serialize: (value: string) => {
-      return value ? JSON.parse(JSON.stringify(value)) : null
+      try {
+        return JSON.parse(value)
+      } catch {
+        return JSON.parse(JSON.stringify(value))
+      }
     },
   })
   public assets: Object
 
   @column()
-  public previewImageUrl: String
+  public previewImageUrl: String | null
 
   @column()
   public mp4PreviewUrl: String
