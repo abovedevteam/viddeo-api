@@ -13,7 +13,7 @@ export default class Templates extends BaseSchema {
       table.float('rating').defaultTo(0.0)
       table.string('ratio').defaultTo('landscape')
       table.integer('number_of_reviews').defaultTo(0)
-      table.json('tags').nullable()
+      table.text('tags').nullable()
       table.json('assets').nullable()
       table.string('mp4_preview_url').nullable()
       table.string('preview_image_url').nullable()

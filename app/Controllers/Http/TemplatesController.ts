@@ -2,7 +2,24 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Template from 'App/Models/Template'
 
 export default class TemplatesController {
-  public async index({}: HttpContextContract) {}
+  public async index({ request }: HttpContextContract) {
+    const query = Template.query().whereNull('deleted_at')
+
+    if (request.input('name')) {
+      query.whereRaw(`LOWER(name) LIKE '%${request.input('name').toLowerCase()}%'`)
+    }
+
+    if (request.input('tags')) {
+      const tags = request.input('tags').replaceAll(' ', '').split(',')
+      console.log(tags)
+
+      for (const tag of tags) {
+        query.whereRaw(`LOWER(tags) LIKE '%${tag.toLowerCase()},%'`)
+      }
+    }
+
+    return await query.exec()
+  }
 
   public async store({ request, response }: HttpContextContract) {
     const { name, description, instructions, ratio, tags, assets } = request.all()

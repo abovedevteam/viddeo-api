@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, beforeSave, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
 import TemplateCustomization from './TemplateCustomization'
 
 export default class Template extends BaseModel {
@@ -28,11 +28,26 @@ export default class Template extends BaseModel {
   public rating: number
 
   @column({
-    serialize: (value: string) => {
-      return value ? JSON.parse(JSON.stringify(value)) : null
+    serialize: (value: String) => {
+      return value.replaceAll(' ', '').slice(0, -1).split(',')
     },
   })
   public tags: Array<String>
+
+  @beforeSave()
+  public static async serializeTags(template: Template) {
+    let newTagsProperty
+
+    if (typeof template.tags === 'string') {
+      newTagsProperty = String(template.tags)
+    } else {
+      newTagsProperty = Array(template.tags).join(',')
+    }
+    newTagsProperty = newTagsProperty.replaceAll(/\["|\['|\"]|\']|"|'| /g, '')
+    newTagsProperty = newTagsProperty.slice(-1, 1) === ',' ? newTagsProperty : newTagsProperty + ','
+
+    template.tags = newTagsProperty
+  }
 
   @column({
     serialize: (value: string) => {
