@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, beforeSave, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
 import TemplateCustomization from './TemplateCustomization'
+import Serialization from 'App/Helpers/Serialization'
 
 export default class Template extends BaseModel {
   @column({ isPrimary: true })
@@ -29,34 +30,18 @@ export default class Template extends BaseModel {
 
   @column({
     serialize: (value: String) => {
-      return value.replaceAll(' ', '').slice(0, -1).split(',')
+      return Serialization.trimArrayString(value).slice(0, -1).split(',')
     },
   })
-  public tags: Array<String>
+  public tags: String | Array<String>
 
   @beforeSave()
   public static async serializeTags(template: Template) {
-    let newTagsProperty
-
-    if (typeof template.tags === 'string') {
-      newTagsProperty = String(template.tags)
-    } else {
-      newTagsProperty = Array(template.tags).join(',')
-    }
-    newTagsProperty = newTagsProperty.replaceAll(/\["|\['|\"]|\']|"|'| /g, '')
-    newTagsProperty = newTagsProperty.slice(-1, 1) === ',' ? newTagsProperty : newTagsProperty + ','
-
-    template.tags = newTagsProperty
+    template.tags = Serialization.cleanUpArrayString(template.tags, true)
   }
 
   @column({
-    serialize: (value: string) => {
-      try {
-        return JSON.parse(value)
-      } catch {
-        return JSON.parse(JSON.stringify(value))
-      }
-    },
+    serialize: Serialization.stringToJson,
   })
   public assets: Object
 

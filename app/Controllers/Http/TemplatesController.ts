@@ -82,11 +82,15 @@ export default class TemplatesController {
       template_preview_image: templatePreviewImage,
     } = await request.validate(CreateAndUpdateTemplateValidator)
 
-    await Template.query()
-      .where('id', params.id)
-      .update({ name, description, instructions, ratio, tags: Array(tags), assets })
-
     const template = await Template.findOrFail(params.id)
+    template.name = name
+    template.description = description
+    template.instructions = instructions as string
+    template.ratio = ratio
+    template.tags = tags
+    template.assets = assets
+
+    await template.save()
 
     await aeTemplate.moveToDisk(
       './templates',
