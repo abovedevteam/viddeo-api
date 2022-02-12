@@ -31,7 +31,7 @@ export default class Serialization {
 
     newValue = this.trimArrayString(newValue)
     if (appendComa) {
-      newValue = newValue.slice(-1, 1) === ',' ? newValue : newValue + ','
+      newValue = newValue.slice(-1) === ',' ? newValue : newValue + ','
     }
 
     return newValue
