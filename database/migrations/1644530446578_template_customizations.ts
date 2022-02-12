@@ -8,10 +8,11 @@ export default class TemplateCustomizations extends BaseSchema {
       table.increments('id')
 
       table.boolean('is_editable').defaultTo(true)
-      table.string('key').notNullable()
+      table.string('key').unique().notNullable()
       table.json('payload').notNullable()
 
       table.bigInteger('template_id').unsigned().references('templates.id').onDelete('CASCADE')
+      table.bigInteger('company_id').unsigned().references('companies.id').onDelete('CASCADE')
 
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

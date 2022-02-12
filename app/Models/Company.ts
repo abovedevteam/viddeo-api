@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, HasMany, column, hasMany, belongsTo, BelongsTo } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
+import TemplateCustomization from './TemplateCustomization'
 
 export default class Company extends BaseModel {
   @column({ isPrimary: true })
@@ -9,7 +10,7 @@ export default class Company extends BaseModel {
   @column()
   public name: String
 
-  @column()
+  @column({ serializeAs: null })
   public ownerId: number
 
   @column.dateTime({ autoCreate: true })
@@ -21,6 +22,11 @@ export default class Company extends BaseModel {
   @hasMany(() => User)
   public users: HasMany<typeof User>
 
-  @belongsTo(() => User)
+  @belongsTo(() => User, {
+    foreignKey: 'ownerId',
+  })
   public owner: BelongsTo<typeof User>
+
+  @hasMany(() => TemplateCustomization)
+  public customizations: HasMany<typeof TemplateCustomization>
 }
